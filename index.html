@@ -201,11 +201,146 @@ body{
 
 <script>
 
-/* pantallas */
+/* cambiar pantallas */
 function siguiente(n){
   document.querySelectorAll(".pantalla").forEach(p=>p.classList.add("oculto"));
   document.getElementById("p"+n).classList.remove("oculto");
 }
 
 /* inicio */
-fu
+function continuar(){
+  let nombre=document.getElementById("nombre").value;
+  document.getElementById("saludo").innerHTML="Esto es para ti, "+nombre;
+
+  explosion();
+  lluvia();
+  siguiente(2);
+}
+
+/* explosión de corazones */
+function explosion(){
+  for(let i=0;i<80;i++){
+    let c=document.createElement("div");
+    c.innerHTML="💗";
+    c.classList.add("corazon");
+
+    c.style.left="50%";
+    c.style.top="50%";
+
+    let x=(Math.random()-0.5)*700;
+    let y=(Math.random()-0.5)*700;
+
+    c.animate([
+      {transform:"translate(0,0)"},
+      {transform:translate(${x}px,${y}px)}
+    ],{duration:1000});
+
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),1000);
+  }
+}
+
+/* lluvia constante de corazones */
+function lluvia(){
+  setInterval(()=>{
+    let c=document.createElement("div");
+    c.innerHTML="💗";
+    c.classList.add("corazon");
+
+    c.style.left=Math.random()*100+"vw";
+    c.style.top="-10px";
+
+    document.body.appendChild(c);
+
+    let caer=setInterval(()=>{
+      c.style.top=c.offsetTop+4+"px";
+
+      if(c.offsetTop>window.innerHeight){
+        c.remove();
+        clearInterval(caer);
+      }
+    },30);
+
+  },300);
+}
+
+/* reproducir música */
+function musica(){
+  document.getElementById("audio").play();
+}
+
+/* mover moto (para celular) */
+function moverIzq(){
+  let moto=document.getElementById("moto");
+  moto.style.left=(moto.offsetLeft-40)+"px";
+}
+
+function moverDer(){
+  let moto=document.getElementById("moto");
+  moto.style.left=(moto.offsetLeft+40)+"px";
+}
+
+/* juego de la moto */
+let mensajes=[
+"Me fui quedando...",
+"Me gustaste...",
+"Quiero seguir contigo...",
+"Voy hacia ti..."
+];
+
+let i=0;
+
+function iniciarJuego(){
+  siguiente(7);
+
+  setInterval(()=>{
+    let obj=document.createElement("div");
+    obj.classList.add("objeto");
+    obj.innerHTML="💗";
+
+    obj.style.left=Math.random()*80+"%";
+
+    document.getElementById("carretera").appendChild(obj);
+
+    let caer=setInterval(()=>{
+      obj.style.top=obj.offsetTop+5+"px";
+
+      let moto=document.getElementById("moto");
+
+      // detectar colisión
+      if(Math.abs(obj.offsetLeft - moto.offsetLeft)<40){
+        document.getElementById("mensajeJuego").innerHTML=mensajes[i];
+        i++;
+        obj.remove();
+        clearInterval(caer);
+
+        if(i>=mensajes.length){
+          document.getElementById("mensajeJuego").innerHTML="Llegué a ti 💗";
+        }
+      }
+
+      if(obj.offsetTop>240){
+        obj.remove();
+        clearInterval(caer);
+      }
+
+    },30);
+
+  },1200);
+}
+
+/* candado secreto */
+function verificar(){
+  let clave=document.getElementById("clave").value.toLowerCase();
+
+  if(clave=="feria"){
+    siguiente(9);
+  }else{
+    alert("Intenta otra vez");
+  }
+}
+
+</script>
+
+ </body>
+</html> 
